@@ -6,13 +6,13 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import { createRequire } from 'module'
 import wasm from 'vite-plugin-wasm'
 import topLevelAwait from 'vite-plugin-top-level-await'
-
+import wasmLoader from './plugins/vite-plugin-wasm-loader'
 const require = createRequire(import.meta.url)
 
 export default defineConfig({
   plugins: [
     vue(),
-    wasm(),
+    wasmLoader(),
     topLevelAwait(),
     nodePolyfills({
       globals: {
@@ -50,11 +50,19 @@ export default defineConfig({
     global: 'globalThis'
   },
   build: {
+    target: 'es2015',
+    rollupOptions: {
+      output: {
+        format: 'iife',
+        entryFileNames: 'assets/[name].[hash].js',
+        chunkFileNames: 'assets/[name].[hash].js',
+        assetFileNames: 'assets/[name].[hash].[ext]'
+      }
+    },
     commonjsOptions: {
       transformMixedEsModules: true,
       include: [/lib\/wallet-sdk\/.*/, /node_modules\/.*/]
-    },
-    target: ['es2020']
+    }
   },
   optimizeDeps: {
     esbuildOptions: {
@@ -72,5 +80,6 @@ export default defineConfig({
     fs: {
       allow: ['.', './lib/wallet-sdk']
     }
-  }
+  },
+  base: './'
 })
