@@ -92,7 +92,7 @@ export default defineComponent({
         }
       },
 
-      creatAddress(mnemonic, chain, fromMnemonic = false) {
+      creatAddress(mnemonic, chain, typeAddress = 'p2pkh', fromMnemonic = false) {
         const params_1 = {
           mnemonic: mnemonic,
           password: ""
@@ -104,7 +104,8 @@ export default defineComponent({
           chain: chain,
           index: "0",
           receiveOrChange: "0",
-          network: "mainnet"
+          network: "mainnet",
+          typeAddress: typeAddress
         }
         try {
           const account = CreateAddress(param)
@@ -182,7 +183,7 @@ export default defineComponent({
           }
           try {
             const account = PrivateKeyToAddress(chain, params)
-            console.log(account);
+            // console.log(account);
             return JSON.stringify({
               data: account,
               iserror: false,
@@ -245,8 +246,8 @@ export default defineComponent({
         };
         try {
           let data1 = await SignTransaction("Ethereum", params);
-          console.log('After awaiting SignTransaction');
-          console.log(`data1 ${data1}`);
+          // console.log('After awaiting SignTransaction');
+          // console.log(`data1 ${data1}`);
           window.$bridge.callmethod('signTransactionEthereum', JSON.stringify({
             data: data1,
             iserror: false,
@@ -265,14 +266,14 @@ export default defineComponent({
         if (!inputs || !outputs) {
           return {error: "Invalid request, inputs or outputs missing"};
         }
-        console.log("old"+privateKey)
+        // console.log("old"+privateKey)
         if (privateKey.startsWith("0x")) {
           privateKey = privateKey.slice(2);
         }
         if(privateKey.length==52){
           privateKey = methods.wifTohex(privateKey);
         }
-        console.log("new"+privateKey)
+        // console.log("new"+privateKey)
         const data = {
           inputs: inputs.map(input => ({
             address: input.address,
@@ -532,8 +533,9 @@ export default defineComponent({
     onMounted(() => {
       methods.bindFunction();
       methods.getConnectStatus();
-
       const bridge = window.$bridge;
+      // console.log(window.$bridge, 'window.$bridge 111');
+
       if (bridge) {
         bridge.registermethod('createMnemonic', methods.createMnemonic);
         bridge.registermethod('creatAddress', methods.creatAddress);
@@ -552,8 +554,22 @@ export default defineComponent({
       var tonAddress = methods.creatAddress("huge legal bean believe general level wrong sorry spare shift bamboo mesh","Ton")
       console.log(tonAddress, 'tonAddress')
 
+
+      console.log('---------------START BTC -------------')
       var btcAddress = methods.creatAddress("huge legal bean believe general level wrong sorry spare shift bamboo mesh","Bitcoin")
-      console.log(btcAddress, 'btcAddress')
+      console.log(btcAddress, 'btcAddress (p2pkh)')
+
+      var btcAddress1 = methods.creatAddress("huge legal bean believe general level wrong sorry spare shift bamboo mesh","Bitcoin","p2wpkh")
+      console.log(btcAddress1, 'btcAddress (p2wpkh)')
+
+      var btcAddress2 = methods.creatAddress("huge legal bean believe general level wrong sorry spare shift bamboo mesh","Bitcoin","p2sh")
+      console.log(btcAddress2, 'btcAddress (p2sh)')
+
+      var btcAddress3 = methods.creatAddress("huge legal bean believe general level wrong sorry spare shift bamboo mesh","Bitcoin","p2tr")
+      console.log(btcAddress3, 'btcAddress (p2tr)')
+
+      console.log('---------------END BTC -------------')
+
 
       var ethAddress = methods.creatAddress("huge legal bean believe general level wrong sorry spare shift bamboo mesh","Ethereum")
       console.log(ethAddress, 'ethAddress')
@@ -564,6 +580,10 @@ export default defineComponent({
 
       var trxAddress = methods.creatAddress("huge legal bean believe general level wrong sorry spare shift bamboo mesh","Trx")
       console.log(trxAddress, 'trxAddress')
+
+      var polygonAddress = methods.creatAddress("huge legal bean believe general level wrong sorry spare shift bamboo mesh","Polygon")
+      console.log(polygonAddress, 'polygonAddress')
+
 
       // var s1 = methods.privateKeyToAddress( 
       //   "714d230f6ef89d869888008803535c59881285bb5e7346b1c8141ac6610fd65f8d41e9451d2c8d92e7730e86ed9b0fc32a8396e549cd638626328fc2431354a4",

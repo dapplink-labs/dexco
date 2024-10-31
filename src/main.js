@@ -7,6 +7,8 @@ import process from 'process'
 // import crypto from 'crypto-browserify';
 window.Buffer = Buffer;
 window.process = process
+window.$bridge = Bridge;
+window.Bridge = Bridge;
 
 const app = createApp(App)
 
