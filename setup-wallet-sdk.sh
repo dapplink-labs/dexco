@@ -3,8 +3,8 @@
 set -ex
 
 REPO_URL="git@github.com:dapplink-labs/wallet-sdk.git"
-# BRANCH="main"
-BRANCH="dexco"
+BRANCH="main"
+# BRANCH="dexco"
 LIB_DIR="lib"
 TARGET_DIR="$LIB_DIR/wallet-sdk"
 

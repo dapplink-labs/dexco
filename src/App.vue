@@ -9,6 +9,7 @@ import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { Erc20ABI } from '@/assets/abi/Erc20ABI';
 import { FuturesMarginPool } from '@/assets/abi/FuturesMarginPool';
+import { getUtxoChainByChain } from '@/utils/utxoChainByChain.js'
 
 import {
   CreateMnemonic,
@@ -98,10 +99,11 @@ export default defineComponent({
           password: ""
         }
         const seed = MnemonicToSeed(params_1)
-
+        const utxoChain = getUtxoChainByChain(chain)
         const param = {
           seedHex: seed.toString("hex"),
           chain: chain,
+          utxoChain: utxoChain || chain,
           index: "0",
           receiveOrChange: "0",
           network: "mainnet",
